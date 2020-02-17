@@ -1,4 +1,5 @@
-- 安装yarn：
- npm install -g yarn
-- 编译并运行 React Native 应用：yarn react-native run-android
-
+- 添加yarn：npm install -g yarn
+- 添加native-base库：yarn add native-base --save
+- 添加viewpager库：yarn add @react-native-community/viewpager
+- 添加native图标库：yarn add react-native-vector-icons --save
+- 运行应用：yarn react-native run-android
