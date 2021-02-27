@@ -1264,9 +1264,9 @@ acorn-walk@^6.0.1:
   integrity sha1-Ejy487hMIXHx9/slJhWxx4prGow=
 
 acorn@^6.0.1:
-  version "6.4.0"
-  resolved "https://registry.npm.taobao.org/acorn/download/acorn-6.4.0.tgz#b659d2ffbafa24baf5db1cdbb2c94a983ecd2784"
-  integrity sha1-tlnS/7r6JLr12xzbsslKmD7NJ4Q=
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.2.tgz#35866fd710528e92de10cf06016498e47e39e1e6"
+  integrity sha512-XtGIhXwF8YM8bJhGxG5kXgjkEuNGLTkoYqVE+KMR+aspr4KGYmKYg7yUe3KghyQ9yheNwLnjmzh/7+gfDBmHCQ==
 
 acorn@^7.1.0:
   version "7.1.0"
@@ -5826,6 +5826,11 @@ react-native-htmlview@^0.15.0:
   dependencies:
     entities "^1.1.1"
     htmlparser2-without-node-native "^3.9.2"
+
+react-native-image-crop-picker@^0.26.2:
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.26.2.tgz#c70985ff6740e63569f90b185be0516d83f5933b"
+  integrity sha512-KnPtSJklwXr/BNdcyAlDp9xkDCQyJ5ZA4dM10elBc2aIXac/4CndbiPFZrwu4GlAYYYKlkiTTwTYW+h4RyGLaw==
 
 react-native-img-cache@^1.6.0:
   version "1.6.0"
