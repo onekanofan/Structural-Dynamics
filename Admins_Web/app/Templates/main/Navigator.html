@@ -1,0 +1,74 @@
+<!--通用模板：以不同的控制器细微改变其视图-->
+
+<div layout="column" style="height: 100%">
+    <div layout="row" flex>
+        <md-sidenav md-whiteframe="2" md-is-locked-open="true" class="md-sidenav-left" flex="20" style="z-index: 99;">
+            <div ui-view="sidenv"></div>
+        </md-sidenav>
+        <md-content id="content" style="background-color: #f7f7f7;overflow: hidden auto;" flex="80">
+            <div ui-view="content"></div>
+        </md-content>
+    </div>
+</div>
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;
+    }
+
+    .list_item {
+        text-align: center;
+        font-size: 25px;
+        margin-left: -30px;
+        margin-bottom: 0;
+        padding: 10px 0;
+        transition-duration: 300ms;
+    }
+
+    .list_item:hover{
+        color: #ff6348;
+        background-color: #ecf0f1;
+    }
+
+    .sel_item{
+        color: #ff6348;
+        background-color: #ecf0f1;
+    }
+
+    .sel_item::before,
+    .sel_item::after{
+        box-sizing: border-box;
+        border-radius: 50%;
+        content: "";
+        position: absolute;
+        display: block;
+        left: calc(50% - 70px);
+        top: calc(50% - 7px);
+        transition: all .5s;
+        background-color: #ff6348;
+        height: 15px;
+        width: 15px;
+        animation: Zoom 200ms;
+        animation-timing-function: ease-out;
+    }
+    .sel_item::after{
+        left: calc(50% + 85px);
+    }
+    @keyframes Zoom {
+        from {
+            transform: scale(0.1,0.1);
+        }
+        to {
+            transform: scale(1,1);
+
+        }
+    }
+    .md-off,
+    .md-on{
+        display: none;
+    }
+
+
+</style>

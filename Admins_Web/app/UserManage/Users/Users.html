@@ -1,0 +1,191 @@
+<div class="table_head">
+<table cellpadding="10px" style="width: 100%;">
+    <thead>
+    <tr flex="12">
+        <th width="20%">头像</th>
+        <th width="20%">ID</th>
+        <th width="20%">用户名</th>
+        <th width="20%">绑定手机</th>
+        <th width="20%">注册时间</th>
+    </tr>
+    </thead>
+    <tbody style="display: none">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+</div>
+<div class="table_wrap">
+    <table cellpadding="10px" width="100%" ng-show="!DLoading">
+        <thead>
+        <tr style="border-bottom: #ccc 3px solid;font-size: 24px;" flex="12">
+            <th width="20%">头像</th>
+            <th width="20%">ID</th>
+            <th width="20%">用户名</th>
+            <th width="20%">绑定手机</th>
+            <th width="20%">注册时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in Lists | orderBy:'registration_time'" class="mouse_in" id="{{item.user_id}}" ng-click="Detail(item)" style="font-size: 22px">
+            <td>
+                <img src="{{item.image}}" style="height: 50px;width: 50px;border-radius:50%;">
+            </td>
+            <td>{{item.user_id}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.telephone}}</td>
+            <td>{{item.registration_time}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="flex_column_center" ng-show="DLoading" style="height: 800px">
+        <md-progress-circular md-diameter="80" class="md-warn md-hue-1"></md-progress-circular>
+    </div>
+    <div class="flex_column_center" ng-show="noContent" style="height: 800px">
+        <p style="font-size: 30px;letter-spacing: 1px;color: #7d8694">{{errorInfo}}</p>
+    </div>
+</div>
+<h3 style="float: right">共{{Lists.length}}条记录</h3>
+
+<md-sidenav class="right-sidenav md-sidenav-left md-whiteframe-4dp" md-component-id="left" md-disable-backdrop="true">
+    <div class="Open_icon_wrap md-primary md-raised" ng-click="toggleRight()">
+        <i class="glyphicon glyphicon-chevron-right" id="Open_icon"></i>
+    </div>
+    <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">详细信息</h1>
+    </md-toolbar>
+    <md-content layout-padding style="overflow: hidden">
+        <div ng-show="UInfo" class="flex_column">
+            <img src="{{UInfo.image}}" style="height: 100px;width: 100px;border-radius: 50%;">
+            <p style="font-size: 22px;margin: 5px">{{UInfo.username}}</p>
+            <div class="flex_row_between detail_list">
+                <p>用户ID</p>
+                <p>{{UInfo.user_id}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>绑定手机</p>
+                <p>{{UInfo.telephone}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>注册时间</p>
+                <p>{{UInfo.registration_time}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>日使用量</p>
+                <p>{{UInfo.day_statisics.do_times}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>日使用时间</p>
+                <p>{{UInfo.day_statisics.use_time}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>周使用量</p>
+                <p>{{UInfo.week_statistics.do_times}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>周使用时间</p>
+                <p>{{UInfo.week_statistics.use_time}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>月使用量</p>
+                <p>{{UInfo.month_statistics.do_times}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>月使用时间</p>
+                <p>{{UInfo.month_statistics.use_time}}</p>
+            </div>
+        </div>
+        <div ng-show="!UInfo" class="flex_row_center" style="font-size: 22px;height: 300px">
+            单击用户以查看详情
+        </div>
+    </md-content>
+</md-sidenav>
+
+
+<style>
+    td, th {
+        padding: 10px;
+    }
+
+    .table_head{
+        position: fixed;
+        width: 80%;
+        padding: 10px 20px;
+        border-bottom: #ccc 3px solid;
+        font-size: 24px;
+        background-color: white;
+
+    }
+
+    .table_wrap {
+        height: 100%;
+        width: 100%;
+        padding: 20px;
+    }
+
+    table > tbody > tr:nth-child(even) {
+        background-color: #eee;
+    }
+
+    .mouse_in:hover {
+        background: #ddd;
+    }
+
+    md-sidenav {
+        overflow: unset;
+    }
+
+    md-sidenav.md-closed,
+    md-sidenav.md-closed-add,
+    md-sidenav.md-closed-remove {
+        display: block;
+    }
+
+    .Open_icon_wrap {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        width: 20px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        margin-top: -50px;
+        color: white;
+        background-color: #3F51B5;
+        text-align: center;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .selected_items {
+        margin: 0 10px;
+        padding: 0;
+        font-size: 18px;
+        background-color: white;
+        border: solid 1px grey;
+        max-height: 420px;
+        overflow: hidden auto;
+    }
+
+    .selected_items_li {
+        border-bottom: 1px solid #ddd;
+        padding: 5px 0 5px 8px;
+        transition-duration: 0.2s;
+    }
+
+    .selected_items_li:hover {
+        background-color: #dfe6e9;
+    }
+
+    .detail_list {
+        width: 90%;
+        border-bottom: #9e9e9e 1px solid;
+        padding: 10px;
+        font-size: 20px;
+    }
+</style>

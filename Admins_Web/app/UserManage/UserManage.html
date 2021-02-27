@@ -1,0 +1,6 @@
+<md-list class="radioButtondemoMultiColumn" style="padding: 0">
+    <md-radio-group ng-model="selectedPage" aria-labelledby="selectedPage" ng-change="swiftState(selectedPage)">
+        <md-radio-button value="Users" class="list_item" id="Users">用户管理</md-radio-button>
+        <md-radio-button ng-show="AdminInfo.root" value="Admins" class="list_item" id="Admins">管理员列表</md-radio-button>
+    </md-radio-group>
+</md-list>

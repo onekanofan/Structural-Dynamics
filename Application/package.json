@@ -1,0 +1,48 @@
+{
+  "name": "front_app_test",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
+    "native-base": "^2.13.8",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-action-button": "^2.8.5",
+    "react-native-easy-toast": "^1.2.0",
+    "react-native-gesture-handler": "^1.7.0",
+    "react-native-htmlview": "^0.15.0",
+    "react-native-img-cache": "^1.6.0",
+    "react-native-image-crop-picker": "^0.26.2",
+    "react-native-reanimated": "^1.13.0",
+    "react-native-safe-area-context": "^3.1.4",
+    "react-native-screens": "^2.10.1",
+    "react-native-shadow": "^1.2.2",
+    "react-native-svg": "^12.1.0",
+    "react-native-swiper": "^1.6.0",
+    "react-native-webview": "^10.7.0",
+    "react-navigation": "^4.4.0",
+    "react-navigation-stack": "^2.8.2",
+    "rn-fetch-blob": "^0.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@react-native-community/async-storage": "^1.12.0",
+    "@react-native-community/eslint-config": "^0.0.7",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.58.0",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

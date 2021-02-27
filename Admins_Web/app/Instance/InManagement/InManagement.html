@@ -1,0 +1,366 @@
+<div ng-click="toggleRight_1()" ng-dblclick="toggleRight_2()" ng-show="!DLoading">
+    <md-card ng-repeat="list in Lists | filter: query" class="question-list-item md-whiteframe-4dp"
+             style="margin: 15px;border-radius: 5px">
+        <md-card-title id="{{list.id}}" class="CheckArea" ng-click="toggle(list.id, selected)">
+            <md-card-title-text>
+                <span class="md-headline" style="white-space: nowrap">ID：{{list.id}}</span>
+            </md-card-title-text>
+            <md-checkbox aria-label="list.id" ng-checked="exists(list.id, selected)" class="id">
+            </md-checkbox>
+        </md-card-title>
+        <md-card-content style="padding:16px 16px 8px 16px">
+            <div class="base_info">
+                <div style="background-color: #ffeaa7">
+                    来源：{{list.source}}
+                </div>
+                <div style="background-color: #fab1a0">
+                    录入日期：{{list.entry_date}}
+                </div>
+                <div style="background-color: #9b59b6">
+                    上传日期：{{list.upload_date}}
+                </div>
+                <div style="background-color: #81ecec">
+                    录入人：{{list.input_person}}
+                </div>
+                <div style="background-color: #3498db">
+                    审核人：{{list.reviewer}}
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-content style="padding:8px 16px;font-size: 17px;" class="Description">
+            <legend>标题</legend>
+            <div ng-bind-html="list.title | trustHtml">{{list.title}}</div>
+            <legend>分类</legend>
+            <div style="text-indent: 36px;font-size: 20px">{{list.first_level}} > {{list.second_level}} > {{list.third_level}}</div>
+        </md-card-content>
+        </md-card-content>
+        <md-card-content>
+            <legend style="color: #3F51B5;font-size: 21px">内容</legend>
+            <div ng-bind-html="list.content | trustHtml">{{list.content}}</div>
+        </md-card-content>
+        <md-card-actions class="bottom-sheet-demo inset" layout="row" layout-align="space-around center">
+            <md-button flex="50" style="margin: 10px 20px" class="md-warn md-raised"
+                       ng-click="Q_Operation(list.id)">删除
+            </md-button>
+        </md-card-actions>
+    </md-card>
+</div>
+<div class="flex_column_center" ng-show="DLoading" style="height: 800px">
+    <md-progress-circular md-diameter="80" class="md-warn md-hue-1"></md-progress-circular>
+</div>
+<div class="flex_column_center" ng-show="noContent" style="height: 800px">
+    <p style="font-size: 30px;letter-spacing: 1px;color: #7d8694">{{errorInfo}}</p>
+</div>
+
+<md-sidenav class="right-sidenav md-sidenav-left md-whiteframe-4dp" md-component-id="left" md-disable-backdrop="true">
+    <div class="Open_icon_wrap md-primary md-raised" ng-click="toggleRight()">
+        <i class="glyphicon glyphicon-chevron-right" id="Open_icon"></i>
+        <!--    <img ng-src="../../resources/up_icon.png" class="Open_icon" alt="展开">-->
+    </div>
+    <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">筛选器</h1>
+    </md-toolbar>
+    <md-content layout-padding style="overflow: hidden">
+        <div style="padding: 0;display: flex;align-items: center">
+            <i class="glyphicon glyphicon-search" style="font-size: 28px;color: #7d8694;margin: 20px 3px 0 0"></i>
+            <md-input-container style="margin-bottom: 0;height: 30px;width: 100%">
+                <label style="margin-bottom: 0">输入搜索内容</label>
+                <input ng-model="query">
+            </md-input-container>
+            <i ng-show="query" ng-click="clearInput()" class="glyphicon glyphicon-remove"
+               style="color:#7d8694;font-size:20px;position: absolute;top:13px;right:12px"></i>
+        </div>
+        <div layout-padding
+             style="margin:16px 10px 16px 10px;border-radius: 4px;border: #3F51B5 1px solid;height: 240px;position: relative">
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <h1 class="md-title" style="margin:15px 0 0 0">一级目录</h1>
+                <md-input-container style="margin:15px 0 0 0">
+                    <md-select ng-model="selectedFirstL" class="selectdemoSelectHeader">
+                        <md-select-header class="demo-select-header">
+                            <md-input-container style="margin-bottom: 0;height: 30px">
+                                <label style="margin-bottom: 0">搜索...</label>
+                                <input ng-model="searchFirstL">
+                            </md-input-container>
+                        </md-select-header>
+                        <md-optgroup>
+                            <md-option ng-value="first_level" style="padding-left: 16px;" ng-repeat="first_level in first_levels |
+              filter:searchFirstL">{{first_level}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <h1 class="md-title" style="margin:15px 0 0 0">二级目录</h1>
+                <md-input-container style="margin:15px 0 0 0">
+                    <md-select ng-model="selectedSecondL" class="selectdemoSelectHeader">
+                        <md-select-header class="demo-select-header">
+                            <md-input-container style="margin-bottom: 0;height: 30px">
+                                <label style="margin-bottom: 0">搜索...</label>
+                                <input ng-model="searchSecondL">
+                            </md-input-container>
+                        </md-select-header>
+                        <md-optgroup>
+                            <md-option ng-value="second_level" style="padding-left: 16px;" ng-repeat="second_level in second_levels |
+              filter:searchSecondL">{{second_level}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <h1 class="md-title" style="margin:15px 0 0 0">三级目录</h1>
+                <md-input-container style="margin:15px 0 0 0">
+                    <md-select ng-model="selectedThirdL" class="selectdemoSelectHeader">
+                        <md-select-header class="demo-select-header">
+                            <md-input-container style="margin-bottom: 0;height: 30px">
+                                <label style="margin-bottom: 0">搜索...</label>
+                                <input ng-model="searchThirdL">
+                            </md-input-container>
+                        </md-select-header>
+                        <md-optgroup>
+                            <md-option ng-value="third_level" style="padding-left: 40px;" ng-repeat="third_level in third_levels |
+              filter:searchThirdL">{{third_level}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div style="display: flex;justify-content: center;font-size: 18px;position: absolute;bottom: -32px;left: 50%;margin-left: -112px">
+                <md-button class="md-primary md-raised" ng-click="refreshData(selectedFirstL, selectedSecondL, selectedThirdL)">查询
+                </md-button>
+                <md-button md-colors="{background: 'green'}" style="box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);"
+                           md-colors-watch="false" ng-click="Restore()">
+                    复原
+                </md-button>
+            </div>
+        </div>
+        <div style="display: flex;justify-content: space-between;">
+            <span style="font-size: 19px;color: #7d8694">已选择{{selected.length}}/{{Lists.length}}项</span>
+            <div style="font-size: 19px;">
+                <md-checkbox aria-label="Select All"
+                             style="margin-bottom: 0"
+                             ng-checked="isChecked()"
+                             md-indeterminate="isIndeterminate()"
+                             ng-click="toggleAll()">
+                    <span ng-if="isChecked()">清空</span>
+                    <span ng-if="!isChecked()">全选</span>
+                </md-checkbox>
+            </div>
+        </div>
+        <ul class="selected_items">
+            <li ng-repeat="item in selected" ng-click="scrollTo(item)" class="selected_items_li">
+                {{item}}
+                <div style="padding:0 5px;float: right;height: 100%" ng-click="toggle(item, selected)">
+                    <i class="glyphicon glyphicon-remove"
+                       style="color:#7d8694;font-size:20px;vertical-align: middle"></i>
+                </div>
+            </li>
+        </ul>
+        <div style="margin: 10px;" layout="row" layout-align="space-around center">
+            <md-button flex="50" style="font-size: 18px" ng-click="Q_Operation(selected)" ng-disabled="!selected.length"
+                       class="md-warn md-raised">删除
+            </md-button>
+        </div>
+    </md-content>
+</md-sidenav>
+
+
+<style>
+    .selectdemoSelectHeader {
+        /* Please note: All these selectors are only applied to children of elements with the 'selectdemoSelectHeader' class */
+    }
+
+    .selectdemoSelectHeader .demo-header-searchbox {
+        border: none;
+        outline: none;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+    }
+
+    .selectdemoSelectHeader .demo-select-header {
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+        padding-left: 10.667px;
+        height: 48px;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: auto;
+    }
+
+    .selectdemoSelectHeader md-content._md {
+        max-height: 240px;
+    }
+
+    .CheckArea {
+        background-color: rgb(63, 81, 181);
+        color: white;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        padding: 16px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .id {
+        margin: 0;
+        background-color: white;
+        height: 20px;
+        width: 20px;
+        border-radius: 3px;
+    }
+
+    .base_info {
+        display: inline-block;
+        font-size: 18px;
+    }
+
+    .base_info > div {
+        color: #2d3436;
+        float: left;
+        background-color: #eee;
+        border-bottom-right-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 3px 15px 3px 5px;
+        margin: 0 5px;
+        white-space: nowrap;
+    }
+
+    .Description > div:nth-child(2) {
+        text-indent: 34px;
+    }
+
+    .noOperation {
+        margin-bottom: 0.3em;
+        vertical-align: middle;
+    }
+
+    .single_line {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .explanation {
+        text-align: center;
+        font-size: 15px;
+        color: #7d8694;
+    }
+
+    .explanation:before {
+        content: "图";
+        margin-right: 10px;
+    }
+
+    .Options > li:nth-child(2) {
+        border-top: #b2bec3 solid 1px;
+    }
+
+    .Options > li:last-child {
+        border-bottom: #b2bec3 solid 1px;
+    }
+
+    .Options > li {
+        padding: 5px;
+        list-style: none;
+        /*display: flex;
+        flex-direction: row;
+        align-items: center;*/
+    }
+
+    .Options > li:hover {
+        background-color: #dfe6e9;
+    }
+
+    .Options > li > div:first-child {
+        float: left;
+    }
+
+    .Options > li > div:nth-child(2) > .single_line {
+        margin: 0;
+        margin-bottom: 0.3em;
+    }
+
+    .Options > li > div > .single_line {
+        margin-bottom: 0.3em;
+    }
+
+    .Solutions {
+        font-size: 20px;
+        color: #e74c3c;
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .Solutions > div {
+        margin: 3px 10px 3px 0;
+    }
+
+    legend {
+        color: #3F51B5;
+        margin-bottom: 5px;
+    }
+
+    .checkboxdemoSelectAll .demo-select-all-checkboxes {
+        padding-left: 30px;
+    }
+
+    .right-sidenav {
+        position: fixed;
+        z-index: 60;
+        left: 20%;
+        top: 80px;
+    }
+
+    md-sidenav {
+        overflow: unset;
+    }
+
+    md-sidenav.md-closed,
+    md-sidenav.md-closed-add,
+    md-sidenav.md-closed-remove {
+        display: block;
+    }
+
+    .Open_icon_wrap {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        width: 20px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        margin-top: -50px;
+        color: white;
+        background-color: #3F51B5;
+        text-align: center;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .selected_items {
+        margin: 0 10px;
+        padding: 0;
+        font-size: 18px;
+        background-color: white;
+        border: solid 1px grey;
+        max-height: 420px;
+        overflow: hidden auto;
+    }
+
+    .selected_items_li {
+        border-bottom: 1px solid #ddd;
+        padding: 5px 0 5px 8px;
+        transition-duration: 0.2s;
+    }
+
+    .selected_items_li:hover {
+        background-color: #dfe6e9;
+    }
+</style>

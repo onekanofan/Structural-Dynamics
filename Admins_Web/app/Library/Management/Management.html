@@ -1,0 +1,350 @@
+<div ng-click="toggleRight_1()" ng-dblclick="toggleRight_2()" ng-show="!DLoading">
+    <md-card ng-repeat="list in Lists | filter: query" class="question-list-item md-whiteframe-4dp"
+             style="margin: 15px;border-radius: 5px">
+        <md-card-title id="{{list.timu_id}}" class="CheckArea" ng-click="toggle(list.timu_id, selected)">
+            <md-card-title-text>
+                <span class="md-headline" style="white-space: nowrap">ID：{{list.timu_id}}</span>
+            </md-card-title-text>
+            <md-checkbox aria-label="list.timu_id" ng-checked="exists(list.timu_id, selected)" class="timu_id">
+            </md-checkbox>
+        </md-card-title>
+        <md-card-content style="padding:16px 16px 8px 16px">
+            <div class="base_info">
+                <div style="background-color: #ffeaa7">
+                    题型：{{list.type}}
+                </div>
+                <div style="background-color: #fab1a0">
+                    关键词：{{list.keywords}}
+                </div>
+                <div style="background-color: #81ecec">
+                    分类：{{list.category}}
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-content style="padding:8px 16px;font-size: 17px;" class="Description">
+            <legend>题目描述</legend>
+            <div ng-repeat="desc in list.description" ng-bind-html="desc | trustHtml"></div>
+        </md-card-content>
+        </md-card-content>
+        <ul style="padding: 0; margin:8px 16px;font-size: 17px;" class="Options">
+            <p ng-show="list.option" style="color: #3F51B5;font-size: 21px">选项</p>
+            <li ng-repeat="(key,value) in list.option">
+                <div>{{key}}、</div>
+                <div ng-repeat="opt in value" ng-bind-html=" opt | trustHtml"></div>
+            </li>
+        </ul>
+        <md-card-content style="padding: 0; margin:8px 16px;font-size: 17px;">
+            <legend>答案</legend>
+            <div class="Solutions">
+                <div ng-repeat="slt in list.solution" ng-bind-html=" slt | trustHtml"></div>
+            </div>
+            <legend>解析</legend>
+            <div ng-repeat="alys in list.analysis" ng-bind-html=" alys | trustHtml"></div>
+        </md-card-content>
+        <md-card-actions class="bottom-sheet-demo inset" layout="row" layout-align="space-around center">
+            <md-button flex="50" style="margin: 10px 20px" class="md-warn md-raised"
+                       ng-click="Q_Operation(list.timu_id)">删除
+            </md-button>
+        </md-card-actions>
+    </md-card>
+</div>
+<div class="flex_column_center" ng-show="DLoading" style="height: 800px">
+    <md-progress-circular md-diameter="80" class="md-warn md-hue-1"></md-progress-circular>
+</div>
+<div class="flex_column_center" ng-show="noContent" style="height: 800px">
+    <p style="font-size: 30px;letter-spacing: 1px;color: #7d8694">{{errorInfo}}</p>
+</div>
+
+
+<md-sidenav class="right-sidenav md-sidenav-left md-whiteframe-4dp" md-component-id="left" md-disable-backdrop="true">
+    <div class="Open_icon_wrap md-primary md-raised" ng-click="toggleRight()">
+        <i class="glyphicon glyphicon-chevron-right" id="Open_icon"></i>
+        <!--    <img ng-src="../../resources/up_icon.png" class="Open_icon" alt="展开">-->
+    </div>
+    <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">筛选器</h1>
+    </md-toolbar>
+    <md-content layout-padding style="overflow: hidden">
+        <div style="padding: 0;display: flex;align-items: center">
+            <i class="glyphicon glyphicon-search" style="font-size: 28px;color: #7d8694;margin: 20px 3px 0 0"></i>
+            <md-input-container style="margin-bottom: 0;height: 30px;width: 100%">
+                <label style="margin-bottom: 0">输入搜索内容</label>
+                <input ng-model="query">
+            </md-input-container>
+            <i ng-show="query" ng-click="clearInput()" class="glyphicon glyphicon-remove"
+               style="color:#7d8694;font-size:20px;position: absolute;top:13px;right:12px"></i>
+        </div>
+        <div layout-padding
+             style="margin:16px 10px 16px 10px;border-radius: 4px;border: #3F51B5 1px solid;height: 180px;position: relative">
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <h1 class="md-title" style="margin:15px 0 0 0">选择分类</h1>
+                <md-input-container style="margin:15px 0 0 0">
+                    <md-select ng-model="selectedcategory" class="selectdemoSelectHeader">
+                        <md-select-header class="demo-select-header">
+                            <md-input-container style="margin-bottom: 0;height: 30px">
+                                <label style="margin-bottom: 0">搜索...</label>
+                                <input ng-model="searchcategory">
+                            </md-input-container>
+                        </md-select-header>
+                        <md-optgroup>
+                            <md-option ng-value="category" style="padding-left: 16px;" ng-repeat="category in categories |
+              filter:searchcategory">{{category}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div style="display: flex;align-items: center;justify-content: space-between">
+                <h1 class="md-title" style="margin:15px 0 0 0">选择关键词</h1>
+                <md-input-container style="margin:15px 0 0 0">
+                    <md-select ng-model="selectedkeyword" class="selectdemoSelectHeader" multiple style="max-width: 140px">
+                        <md-select-header class="demo-select-header">
+                            <md-input-container style="margin-bottom: 0;height: 30px">
+                                <label style="margin-bottom: 0">搜索...</label>
+                                <input ng-model="searchkeyword">
+                            </md-input-container>
+                        </md-select-header>
+                        <md-optgroup>
+                            <md-option ng-value="keyword" style="padding-left: 40px;" ng-repeat="keyword in keywords |
+              filter:searchkeyword" ng-click="ifSelectAll(keyword,selectedkeyword)">{{keyword}}
+                            </md-option>
+                        </md-optgroup>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div style="display: flex;justify-content: center;font-size: 18px;position: absolute;bottom: -32px;left: 50%;margin-left: -112px">
+                <md-button class="md-primary md-raised" ng-click="refreshData(selectedcategory,selectedkeyword)">查询
+                </md-button>
+                <md-button md-colors="{background: 'green'}" style="box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);"
+                           md-colors-watch="false" ng-click="Restore()">
+                    复原
+                </md-button>
+            </div>
+        </div>
+        <div style="display: flex;justify-content: space-between;">
+            <span style="font-size: 19px;color: #7d8694">已选择{{selected.length}}/{{Lists.length}}项</span>
+            <div style="font-size: 19px;">
+                <md-checkbox aria-label="Select All"
+                             style="margin-bottom: 0"
+                             ng-checked="isChecked()"
+                             md-indeterminate="isIndeterminate()"
+                             ng-click="toggleAll()">
+                    <span ng-if="isChecked()">清空</span>
+                    <span ng-if="!isChecked()">全选</span>
+                </md-checkbox>
+            </div>
+        </div>
+        <ul class="selected_items">
+            <li ng-repeat="item in selected" ng-click="scrollTo(item)" class="selected_items_li">
+                {{item}}
+                <div style="padding:0 5px;float: right;height: 100%" ng-click="toggle(item, selected)">
+                    <i class="glyphicon glyphicon-remove"
+                       style="color:#7d8694;font-size:20px;vertical-align: middle"></i>
+                </div>
+            </li>
+        </ul>
+        <div style="margin: 10px;" layout="row" layout-align="space-around center">
+            <md-button flex="50" style="font-size: 18px" ng-click="Q_Operation(selected)" ng-disabled="!selected.length"
+                       class="md-warn md-raised">删除
+            </md-button>
+        </div>
+    </md-content>
+</md-sidenav>
+
+<style>
+    .selectdemoSelectHeader {
+        /* Please note: All these selectors are only applied to children of elements with the 'selectdemoSelectHeader' class */
+    }
+
+    .selectdemoSelectHeader .demo-header-searchbox {
+        border: none;
+        outline: none;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+    }
+
+    .selectdemoSelectHeader .demo-select-header {
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+        padding-left: 10.667px;
+        height: 48px;
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: auto;
+    }
+
+    .selectdemoSelectHeader md-content._md {
+        max-height: 240px;
+    }
+
+    .CheckArea {
+        background-color: rgb(63, 81, 181);
+        color: white;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        padding: 16px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .timu_id {
+        margin: 0;
+        background-color: white;
+        height: 20px;
+        width: 20px;
+        border-radius: 3px;
+    }
+
+    .base_info {
+        display: inline-block;
+        font-size: 18px;
+    }
+
+    .base_info > div {
+        color: #2d3436;
+        float: left;
+        background-color: #eee;
+        border-bottom-right-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 3px 15px 3px 5px;
+        margin: 0 5px;
+        white-space: nowrap;
+    }
+
+    .Description > div:nth-child(2) {
+        text-indent: 34px;
+    }
+
+    .noOperation {
+        margin-bottom: 0.3em;
+        vertical-align: middle;
+    }
+
+    .single_line {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .explanation {
+        text-align: center;
+        font-size: 15px;
+        color: #7d8694;
+    }
+
+    .explanation:before {
+        content: "图";
+        margin-right: 10px;
+    }
+
+    .Options > li:nth-child(2) {
+        border-top: #b2bec3 solid 1px;
+    }
+
+    .Options > li:last-child {
+        border-bottom: #b2bec3 solid 1px;
+    }
+
+    .Options > li {
+        padding: 5px;
+        list-style: none;
+        /*display: flex;
+        flex-direction: row;
+        align-items: center;*/
+    }
+
+    .Options > li:hover {
+        background-color: #dfe6e9;
+    }
+
+    .Options > li > div:first-child {
+        float: left;
+    }
+
+    .Options > li > div:nth-child(2) > .single_line {
+        margin: 0;
+        margin-bottom: 0.3em;
+    }
+
+    .Options > li > div > .single_line {
+        margin-bottom: 0.3em;
+    }
+
+    .Solutions {
+        font-size: 20px;
+        color: #e74c3c;
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .Solutions > div {
+        margin: 3px 10px 3px 0;
+    }
+
+    legend {
+        color: #3F51B5;
+        margin-bottom: 5px;
+    }
+
+    .checkboxdemoSelectAll .demo-select-all-checkboxes {
+        padding-left: 30px;
+    }
+
+    .right-sidenav {
+        position: fixed;
+        z-index: 60;
+        left: 20%;
+        top: 80px;
+    }
+
+    md-sidenav {
+        overflow: unset;
+    }
+
+    md-sidenav.md-closed,
+    md-sidenav.md-closed-add,
+    md-sidenav.md-closed-remove {
+        display: block;
+    }
+
+    .Open_icon_wrap {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        width: 20px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        margin-top: -50px;
+        color: white;
+        background-color: #3F51B5;
+        text-align: center;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .selected_items {
+        margin: 0 10px;
+        padding: 0;
+        font-size: 18px;
+        background-color: white;
+        border: solid 1px grey;
+        max-height: 420px;
+        overflow: hidden auto;
+    }
+
+    .selected_items_li {
+        border-bottom: 1px solid #ddd;
+        padding: 5px 0 5px 8px;
+        transition-duration: 0.2s;
+    }
+
+    .selected_items_li:hover {
+        background-color: #dfe6e9;
+    }
+</style>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>结构动力学后台管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="node_modules/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+    <link rel="shortcut icon" href="resources/Icon_on_Web.png">
+    <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="app.animations.css"/>
+    <link rel="stylesheet" href="./font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<body ng-cloak ng-controller="myAppCtrl">
+<div ui-view="header" id="Header"></div>
+<div ui-view="main" id="MainContainer"></div>
+<div id="showAlert" class="Alert" ng-cloak style="display: none">
+    <div class="alertWrap flex_column" ng-show="!Alert.ifSuper">
+        <div class="flex_row" style="border-radius: 10px 10px 0 0;background-color: #ff6348;width: 100%;padding: 10px">
+            <img src="resources/Icon_on_Web.png" style="height: 36px;width: 36px;border-radius: 4px;">
+            <p style="color: white;margin: 0 0 0 10px; font-size: 22px;letter-spacing: 2px;white-space: nowrap">
+                {{Alert.header}}
+            </p>
+        </div>
+        <div style="padding: 30px;width: 100%;font-size: 20px;letter-spacing: 2px;text-indent: 44px">
+            {{Alert.content}}
+        </div>
+        <div class="flex_row_around" style="width: 100%;padding: 25px 40px">
+            <md-button style="font-weight: bold;font-size: 20px;color: white" class="md-raised md-primary" ng-click="setConfirm(1)">确 定</md-button>
+            <md-button style="font-weight: bold;font-size: 20px;color: white" class="md-raised md-warn" ng-click="setConfirm(-1)">取 消</md-button>
+        </div>
+    </div>
+    <div class="superAlertWrap flex_column" ng-show="Alert.ifSuper">
+        <div class="flex_row" style="border-radius: 10px 10px 0 0;background-color: #ff6348;width: 100%;padding: 10px">
+            <img src="resources/Icon_on_Web.png" style="height: 36px;width: 36px;border-radius: 4px;">
+            <p style="color: white;margin: 0 0 0 10px;font-weight: bold; font-size: 22px;letter-spacing: 2px;white-space: nowrap">
+                {{Alert.header}}
+            </p>
+        </div>
+        <div style="padding: 30px;padding-bottom:10px;width: 100%;font-size: 20px;letter-spacing: 2px;text-indent: 44px">
+            {{Alert.content}}
+        </div>
+        <div class="flex_row" style="width: 70%;">
+            <i class="glyphicon glyphicon-user" style="color: #7d8694;font-size: 24px;margin-top: 12px; margin-right: 8px"></i>
+            <md-input-container style="margin-bottom: 0;height: 30px;width: 100%;font-size: 22px">
+                <label style="margin-bottom: 0;color: #7d8694">用户名：{{Alert._target}}</label>
+                <input ng-model="Alert._current">
+            </md-input-container>
+        </div>
+        <div class="flex_row_around" style="width: 100%;padding: 25px 40px">
+            <md-button style="font-weight: bold;font-size: 20px;color: white" class="md-raised md-primary" ng-click="setConfirm(1)" ng-disabled="Alert._current===Alert._target?false:true">确 定</md-button>
+            <md-button style="font-weight: bold;font-size: 20px;color: white" class="md-raised md-warn" ng-click="setConfirm(-1)">取 消</md-button>
+        </div>
+    </div>
+</div>
+<div id="Circuclar" ng-show="GLoading">
+    <md-progress-circular md-diameter="100" class="md-warn md-hue-1"></md-progress-circular>
+</div>
+<div id="showInfo" class="slide_" style="display: none">
+    <div class="{{showInfo.type}}" style="border-radius: 3px;width: 100%;height: 100%;font-size: 22px;color: white;display: flex;flex-direction: row;align-items: center;justify-content: space-between;padding: 0 12px;white-space: nowrap">
+        {{showInfo.content}}
+        <div class="flex_row_center" style="background-color: #bdc3c7;border-radius: 50%;height: 24px;width: 24px;font-size: 24px;cursor: pointer" id="closeInfo">×</div>
+    </div>
+</div>
+
+<!-- Project using Library Dependencies all blow -->
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="node_modules/angular-messages/angular-messages.min.js"></script>
+<script src="node_modules/@uirouter/angularjs/release/angular-ui-router.min.js"></script>
+<script src="node_modules/angular-material/angular-material.min.js"></script>
+<script src="node_modules/angular-file-upload/dist/angular-file-upload.min.js"></script>
+<script src="node_modules/angular-resource/angular-resource.min.js"></script>
+<script src="node_modules/angular-jwt/dist/angular-jwt.min.js"></script>
+
+<script src="app.js"></script>
+<script src="app.animations.js"></script>
+<script src="app/app.modules.js"></script>
+
+<script src="app/Login/Login.js"></script>
+
+<script src="app/Library/Library.js"></script>
+<script src="app/Library/Upload/Upload.js"></script>
+<script src="app/Library/Update/Update.js"></script>
+<script src="app/Library/Examine/Examine.js"></script>
+<script src="app/Library/Management/Management.js"></script>
+
+<script src="app/Instance/Instance.js"></script>
+<script src="app/Instance/InUpload/InUpload.js"></script>
+<script src="app/Instance/InExamine/InExamine.js"></script>
+<script src="app/Instance/InUpdate/InUpdate.js"></script>
+<script src="app/Instance/InManagement/InManagement.js"></script>
+
+<script src="app/UserManage/UserManage.js"></script>
+<script src="app/UserManage/Users/Users.js"></script>
+<script src="app/UserManage/Admins/Admins.js"></script>
+
+<script src="app/app.factory.js"></script>
+<script src="app/app.resource.js"></script>
+<script src="app/helper.js"></script>
+</body>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;
+    }
+
+    .flex_row_center{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    .flex_column_center{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .flex_row{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .flex_row_between{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .flex_row_around{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .flex_column{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #showAlert{
+        z-index: 99;
+        top:0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        transition-duration: 300ms;
+        transition-timing-function: ease-out;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+    .Alert{
+        opacity: 0;
+    }
+
+    .showAlert{
+        opacity: 1;
+    }
+
+    .alertWrap{
+        background-color: white;
+        width: 450px;
+        height: auto;
+        border-radius: 10px;
+    }
+    .superAlertWrap{
+        background-color: white;
+        width: 450px;
+        height: auto;
+        border-radius: 10px;
+    }
+    #Circuclar{
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        left: 50%;
+        top:50%;
+        margin-left: -50px;
+        margin-top: -50px;
+        z-index: 100;
+    }
+
+    #showInfo{
+        width: 600px;
+        height: 40px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -300px;
+        text-align: center;
+        z-index: 100;
+        box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+        border-radius: 3px;
+    }
+    .slide_{
+        margin-top: 280px;
+        opacity: 0;
+    }
+    .slide_In{
+        margin-top: -20px;
+        transition-timing-function: ease-out;
+        opacity: 1;
+        transition-duration: 200ms;
+    }
+    .slide_Out{
+        margin-top: -320px;
+        transition-timing-function: ease-in;
+        opacity: 0;
+        transition-duration: 200ms;
+    }
+    .successInfo{
+        background-color: #2ed573;
+    }
+    .failureInfo{
+        background-color: #ff6348;
+    }
+</style>
+</html>

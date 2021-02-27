@@ -1,0 +1,242 @@
+<div layout="row" style="overflow-y: unset;height: 100%">
+    <md-content class="md-content-style" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter" flex>
+
+        <p style="font-size: 26px;padding: 5px"><strong>上传题目</strong></p>
+
+        <div class="well my-drop-zone" nv-file-over="" uploader="uploader" style="font-size: 24px">
+            拖拽上传
+        </div>
+
+        <span layout-nowrap style="font-size: 20px">队列长度: {{ uploader.queue.length }}（最大为99）</span>
+
+        <table cellpadding="10px" width="100%">
+
+            <thead>
+            <tr style="border-bottom: #ccc 3px solid;font-size: 20px" flex="12">
+                <th width="6%">序号</th>
+                <th width="40%">名称</th>
+                <th ng-show="uploader.isHTML5" width="9%">大小</th>
+                <th width="18%">进度</th>
+                <th width="12%">状态</th>
+                <th width="15%">操作</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="table_wrap" id="table_wrap">
+            <table style="width: 100%">
+                <thead>
+                <tr flex="12">
+                    <th width="6%"></th>
+                    <th width="40%"></th>
+                    <th width="9%"></th>
+                    <th width="18%"></th>
+                    <th width="12%"></th>
+                    <th width="15%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in uploader.queue" class="mouse_in" style="font-size: 20px">
+                    <td>{{uploader.getIndexOfItem(item)+1}}</td>
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                    <td ng-show="uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;position: relative">
+                            <div style="position:absolute;width:100%;height:100%;display: flex;justify-content: center;align-items: center">
+                                <span ng-show="item.isUploading" style="color: black;">{{item.progress}}%</span>
+                            </div>
+                            <div class="progress-bar" role="progressbar"
+                                 ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                    <td nowrap class="text-center">
+                        <span ng-show="item.isUploading"><i class="glyphicon glyphicon-floppy-open"></i> 正在上传</span>
+                        <span ng-show="item.isCancel" class="failure"><i class="glyphicon glyphicon-ban-circle">已取消</i></span>
+                        <span ng-show="item.isError" class="failure"><i
+                                class="glyphicon glyphicon-floppy-remove"> 上传失败</i></span>
+                        <span ng-show="item.isReady && !item.isUploading"><i class="glyphicon glyphicon-time"></i> 准备上传</span>
+                        <span ng-show="item.isSuccess" class="{{item.state}}"><i
+                                class="glyphicon glyphicon-floppy-saved"></i> {{item.isAdd?item.isAdd:'上传成功'}}</span>
+                    </td>
+                    <td nowrap>
+                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
+                                ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span> 上传
+                        </button>
+                        <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()"
+                                ng-disabled="!item.isUploading || !item.isReady">
+                            <span class="glyphicon glyphicon-ban-circle"></span> 取消
+                        </button>
+                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                            <span class="glyphicon glyphicon-trash"></span> 移除
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <input type="file" accept="application/zip" multiple nv-file-select uploader="uploader" id="upload_zip"
+               ng-show="false"/><br/>
+
+        <span ng-show="showQR" style="font-size: 20px" class="flex_row">
+            <md-progress-circular md-mode="indeterminate" class="md-hue-2" md-diameter="20px"
+                                  style="float: left;"></md-progress-circular>正在添加文件...
+        </span>
+        <span ng-show="!showQR" style="font-size: 20px">总进度：{{uploader.progress?uploader.progress:0}}%</span>
+
+        <div>
+            <div style="padding: 10px 0 20px 0">
+                <md-progress-linear md-mode="determinate" value="{{uploader.progress}}"></md-progress-linear>
+            </div>
+
+            <div layout="row" layout-align="center center">
+                <md-button class="md-raised md-primary"
+                           style="height:36px;width:100px;margin:0 10px;color: white;border-radius: 4px"><label
+                        for="upload_zip"><span class="glyphicon glyphicon-plus"></span> 添加文件</label>
+                </md-button>
+                <!--在添加文件时不能全部上传-->
+                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
+                        ng-disabled="!uploader.getNotUploadedItems().length || showQR"
+                        style="height:36px;margin:0 10px;color: white;border-radius: 4px">
+                    <span class="glyphicon glyphicon-upload"></span> 全部上传
+                </button>
+                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()"
+                        ng-disabled="!uploader.isUploading"
+                        style="height:36px;margin:0 10px;color: white;border-radius: 4px">
+                    <span class="glyphicon glyphicon-ban-circle"></span> 全部取消
+                </button>
+                <md-button class="md-raised md-warn" ng-click="uploader.clearQueue()"
+                           ng-disabled="!uploader.queue.length"
+                           style="width:100px;margin:0 10px;color: white;border-radius: 4px">
+                    <span class="glyphicon glyphicon-trash"></span> 清空队列
+                </md-button>
+            </div>
+        </div>
+        </form>
+
+    </md-content>
+
+    <div class="Hidden_info {{UInfo}}">
+        <div style="background-color: #ff6348;width: 100px;height: 30px;position:absolute;top: -30px;left: 50%;margin-left: -50px;border-radius: 5px 5px 0 0;"
+             class="flex_row_center" ng-click="Upload_info()">
+            <img src="resources/up_icon.png" ng-show="UInfo==='Open_info'?false:true" style="width:70%;height: 80%"
+                 alt="展开">
+            <img src="resources/up_icon.png" ng-show="UInfo==='Open_info'?true:false"
+                 style="width:70%;height: 80%;transform: scaleY(-1)" alt="关闭">
+        </div>
+        <div style="padding: 20px;height: 100%">
+            <table cellpadding="10px" style="width: 100%;border-bottom: #ccc 3px solid;font-size: 24px;">
+                <thead>
+                <tr flex="12" style="white-space: nowrap">
+                    <th width="30%">文件</th>
+                    <th width="15%">操作时间</th>
+                    <th width="15%">状态</th>
+                    <th width="40%">详情信息</th>
+                </tr>
+                <md-button class="md-raised md-warn"
+                           style="position:absolute;right:30px;top: 20px;font-size: 20px;font-weight: bold"
+                           ng-click="ClearInfo()">清 空
+                </md-button>
+                </thead>
+            </table>
+            <div style="overflow-y: auto;height: calc(100% - 60px)">
+                <table cellpadding="10px" width="100%">
+                    <thead>
+                    <tr flex="12">
+                        <th width="30%"></th>
+                        <th width="15%"></th>
+                        <th width="15%"></th>
+                        <th width="40%"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in Info | reverse" class="{{item.isError}}" style="font-size: 22px">
+                        <td>{{item.filename}}</td>
+                        <td>{{item.time}}</td>
+                        <td class="state">{{item.state}}</td>
+                        <td class="state">{{item.detail}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    td, th {
+        padding: 10px;
+    }
+
+    .my-drop-zone {
+        border: dotted 3px lightgray;
+    }
+
+    .nv-file-over {
+        border: dotted 3px green;
+    }
+
+    .table_wrap {
+        min-height: 50px;
+        max-height: 450px;
+        overflow-y: hidden;
+        width: 100%;
+    }
+
+    .table_wrap_active {
+        overflow-y: auto;
+        margin-right: -17px;
+    }
+
+
+    .md-content-style {
+        padding: 20px 40px;
+    }
+
+    .mouse_in:nth-child(even) {
+        background-color: #eee;
+    }
+
+    .mouse_in:hover {
+        background: #ddd;
+    }
+
+    .Hidden_info {
+        width: 78%;
+        margin-left: 1%;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.75);
+        border-radius: 8px;
+        position: fixed;
+        bottom: -40%;
+        height: 40%;
+        background-color: white;
+        transition-duration: 0.4s;
+        transition-timing-function: ease-out;
+    }
+
+    .Half_info {
+        bottom: calc(-40% + 150px);
+    }
+
+    .Open_info {
+        bottom: 0;
+        min-height: 150px;
+    }
+
+    .failure {
+        color: #e74c3c;
+    }
+
+    .success {
+        color: #2ecc71;
+    }
+
+    .error {
+        background-color: #ffeaa7;
+    }
+
+    .error > .state {
+        color: #e74c3c;
+    }
+
+</style>

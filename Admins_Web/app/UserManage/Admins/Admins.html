@@ -1,0 +1,194 @@
+<div class="table_head">
+    <table cellpadding="10px" style="width: 100%;">
+        <thead>
+        <tr flex="12">
+            <th width="33%">ID</th>
+            <th width="33%">用户名</th>
+            <th width="33%">上传数量</th>
+        </tr>
+        </thead>
+        <tbody style="display: none">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<div class="table_wrap">
+    <table cellpadding="10px" width="100%" ng-show="!DLoading">
+        <thead>
+        <tr style="border-bottom: #ccc 3px solid;font-size: 24px;" flex="12">
+            <th width="33%">ID</th>
+            <th width="33%">用户名</th>
+            <th width="33%">上传数量</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="item in Lists | orderBy:'admin_id'" class="mouse_in" id="{{item.admin_id}}" ng-click="Detail(item)" style="font-size: 22px;">
+            <td style="padding: 15px">{{item.admin_id}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.upload_number}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="flex_column_center" ng-show="DLoading" style="height: 800px">
+        <md-progress-circular md-diameter="80" class="md-warn md-hue-1"></md-progress-circular>
+    </div>
+    <div class="flex_column_center" ng-show="noContent" style="height: 800px">
+        <p style="font-size: 30px;letter-spacing: 1px;color: #7d8694">{{errorInfo}}</p>
+    </div>
+</div>
+<h3 style="float: right">共{{Lists.length}}条记录</h3>
+
+<md-sidenav class="right-sidenav md-sidenav-left md-whiteframe-4dp" md-component-id="left" md-disable-backdrop="true">
+    <div class="Open_icon_wrap md-primary md-raised" ng-click="toggleRight()">
+        <i class="glyphicon glyphicon-chevron-right" id="Open_icon"></i>
+    </div>
+    <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">详细信息</h1>
+    </md-toolbar>
+    <md-content layout-padding style="overflow: hidden">
+        <div ng-show="AInfo" class="flex_column">
+            <div class="flex_row_between detail_list">
+                <p>管理员ID</p>
+                <p>{{AInfo.admin_id}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>用户名</p>
+                <p>{{AInfo.username}}</p>
+            </div>
+            <div class="flex_row_between detail_list">
+                <p>上传数量</p>
+                <p>{{AInfo.upload_number}}</p>
+            </div>
+            <div class="detail_list" style="border-bottom: none;display: flex;align-items: center">
+                <i class="fa fa-key" aria-hidden="true" style="color:#7d8694; font-size: 28px;margin: 20px 3px 0 0"></i>
+                <md-input-container style="margin-bottom: 0;height: 30px;width: 100%">
+                    <label style="margin-bottom: 0;color: #e74c3c">点击修改密码</label>
+                    <input ng-model="password" type="{{ifHidden?'password':'text'}}">
+                </md-input-container>
+                <i class="fa fa-eye" ng-show="!ifHidden" aria-hidden="true" style="color:#7d8694; font-size: 22px;margin-top: 18px" ng-click="ChangeHidden()"></i>
+                <i class="fa fa-eye-slash" ng-show="ifHidden" aria-hidden="true" style="color:#7d8694; font-size: 22px;margin-top: 18px" ng-click="ChangeHidden()"></i>
+            </div>
+            <div style="margin: 10px;" layout="row" layout-align="space-around center">
+                <md-button flex="50" style="font-size: 18px;color:white;" ng-click="ChangePassword(AInfo.admin_id, password)" class="md-primary md-raised" ng-show="password">提交
+                </md-button>
+                <md-button ng-show="!AInfo.is_root&&!password" flex="50" style="font-size: 18px" ng-click="DeleteAdmin(AInfo.username)" class="md-warn md-raised">删除
+                </md-button>
+            </div>
+        </div>
+
+        <div ng-show="!AInfo" class="flex_row_center" style="font-size: 22px;height: 300px">
+            单击管理员以执行操作
+        </div>
+
+    </md-content>
+</md-sidenav>
+
+<div class="flex_row_center" style="height: 75px;width: 75px;background-color: #eb5648;border-radius: 10px;position:absolute;right: 80px;bottom: 80px;z-index: 99" ng-click="AddWrap()">
+    <i class="fa fa-plus" aria-hidden="true" style="color: white;font-size: 40px"></i>
+
+</div>
+<div id="AAwrap" class="AAwrap">
+    <div class="flex_row" style="margin-top: 10px">
+        <i class="glyphicon glyphicon-user" style="color: #7d8694;font-size: 24px;margin-top: 12px; margin-right: 8px"></i>
+        <md-input-container style="margin-bottom: 0;height: 30px;width: 80%">
+            <label style="margin-bottom: 0;color: #7d8694">输入用户名</label>
+            <input ng-model="CreatUse">
+        </md-input-container>
+    </div>
+    <div class="flex_row" style="margin-top: 30px">
+        <i class="fa fa-key" aria-hidden="true" style="color:#7d8694; font-size: 24px;margin-top: 12px; margin-right: 8px"></i>
+        <md-input-container style="margin-bottom: 0;height: 30px;width: 80%">
+            <label style="margin-bottom: 0;color: #7d8694">输入密码</label>
+            <input ng-model="CreatPass">
+        </md-input-container>
+    </div>
+    <div style="margin: 20px;" layout="row" layout-align="space-around center">
+        <md-button flex="30" style="font-size: 18px;color:white;" ng-click="CreateAdmin(CreatUse, CreatPass)" ng-disabled="!CreatUse||!CreatPass" class="md-primary md-raised">创建
+        </md-button>
+    </div>
+</div>
+<style>
+    td, th {
+        padding: 10px;
+    }
+
+    .table_head{
+        position: fixed;
+        width: 80%;
+        padding: 10px 20px;
+        border-bottom: #ccc 3px solid;
+        font-size: 24px;
+        background-color: white;
+
+    }
+
+    .table_wrap {
+        height: 100%;
+        width: 100%;
+        padding: 20px;
+    }
+
+    table > tbody > tr:nth-child(even) {
+        background-color: #eee;
+    }
+
+    .mouse_in:hover {
+        background: #ddd;
+    }
+
+    md-sidenav {
+        overflow: unset;
+    }
+
+    md-sidenav.md-closed,
+    md-sidenav.md-closed-add,
+    md-sidenav.md-closed-remove {
+        display: block;
+    }
+
+    .Open_icon_wrap {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        width: 20px;
+        height: 100px;
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        margin-top: -50px;
+        color: white;
+        background-color: #3F51B5;
+        text-align: center;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .detail_list {
+        width: 90%;
+        border-bottom: #9e9e9e 1px solid;
+        padding: 10px;
+        font-size: 20px;
+    }
+
+    .AAwrap{
+        box-shadow: 0 0 3px 0 rgba(0,0,0,0.75);
+        position:absolute;
+        height: 250px;
+        width: 300px;
+        background-color: white;
+        bottom: 185px;
+        right: 75px;
+        border-radius: 10px;
+        opacity: 0;
+        transition-duration: 500ms;
+        padding: 20px;
+        font-size: 18px;
+    }
+
+    .AAwrap_app{
+        opacity: 1;
+    }
+</style>

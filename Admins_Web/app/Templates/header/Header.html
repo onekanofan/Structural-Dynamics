@@ -1,0 +1,110 @@
+<!--通用模板：以不同的控制器细微改变其视图-->
+<div class="flex_row" style="margin-top: 15px;float: left">
+    <img src="resources/Icon_on_Web.png" style="height: 50px;width: 50px;border-radius: 5px;margin-left: 15px">
+    <p style="color: white;margin: 0 0 0 10px; font-size: 30px;">
+        结构动力学
+    </p>
+</div>
+<div style="color: white;font-size: 22px;margin: 25px 0 0 255px" class="flex_row" ng-controller="UserInfo">
+    <!--UserInfo在app.js中定义-->
+    <p>欢迎您，{{AdminInfo.root?'超级管理员':'管理员'}}</p>
+    <div style="margin-left:5px;text-decoration: underline;cursor: pointer;position: relative"
+       id="_target"
+       onmouseleave="document.getElementById('_blank').className='_blank'"
+    >{{AdminInfo.username}}
+        <div id="_blank" class="_blank">
+            <div class="flex_row_between" style="width: 190px;padding: 10px 0">
+                <p style="color:black;">ID</p>
+                <p style="color: #eb5648">{{AdminInfo.ID}}</p>
+            </div>
+            <md-button class="md-warn md-raised" style="font-size: 18px" ng-click="Cancellation()">注 销</md-button>
+        </div>
+    </div>
+</div>
+<div class="flex_row" style="position:absolute;top:0;right:0;">
+    <span class="flex_row_center block" id="Library" ng-click="SwiftHeader('Library')">
+        <p>题库</p>
+    </span>
+    <span class="flex_row_center block" id="Instance" ng-click="SwiftHeader('Instance')">
+        <p>拓展</p>
+    </span>
+    <span class="flex_row_center block" id="UserManage" ng-click="SwiftHeader('UserManage')">
+        <p>用户管理</p>
+    </span>
+</div>
+
+<script>
+
+</script>
+
+
+<style>
+    p{
+        margin: 0;
+    }
+
+    #Header{
+        -webkit-box-shadow: 0 0 6px 0 rgba(0,0,0,0.75);
+        -moz-box-shadow: 0 0 6px 0 rgba(0,0,0,0.75);
+        box-shadow: 0 0 6px 0 rgba(0,0,0,0.75);
+        position: fixed;
+        width: 100%;
+        z-index: 20;
+        height: 80px;
+        background-color: #ff6348;
+    }
+
+    #MainContainer{
+        height: calc(100% - 80px);
+        position: relative;
+        z-index: 10;
+        top: 80px
+    }
+
+    .block{
+        height: 80px;
+        width: auto;
+        padding: 0 15px;
+        font-size: 25px;
+        color: white;
+        cursor: pointer;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+    }
+
+    .block:hover{
+        background-color: #EF5D40;
+    }
+
+    ._blank{
+        font-size: 22px;
+        width: 240px;
+        height: 110px;
+        background-color: white;
+        position: absolute;
+        top: 27px;
+        left: -101px;
+        opacity: 0;
+        border-radius: 4px;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+        transform: translateY(5px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.75);
+    }
+    .slideIn{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+
+    .selected{
+        border-bottom: white 6px solid;
+        background-color: #EF5D40;
+    }
+
+    *:focus {
+        outline: none;
+    }
+</style>
